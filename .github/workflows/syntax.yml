@@ -1,0 +1,27 @@
+name: Syntax checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Compile PARITY files
+        run: |
+          python -m py_compile models/parity.py
+          python -m py_compile exp/exp_long_term_forecasting_parity.py
+          python -m py_compile run_parity.py
+
+      - name: Validate Traffic shell script
+        run: |
+          bash -n scripts/PARITY/traffic.sh
